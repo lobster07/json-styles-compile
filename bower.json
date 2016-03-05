@@ -1,0 +1,23 @@
+{
+  "name": "json-styles-compile",
+  "homepage": "https://github.com/lobster07/json-styles-compile",
+  "authors": [
+    "Paul Zhovnir"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.2.1",
+    "underscore": "~1.8.3"
+  }
+}

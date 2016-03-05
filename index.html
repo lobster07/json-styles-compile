@@ -1,0 +1,147 @@
+<!doctype HTML>
+<html>
+  <head>
+    <title>generator of styles</title>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/underscore/underscore-min.js"></script>
+
+  </head>
+  <body>
+
+    <div class="item-container">
+      <div class="item">
+        <input id="input1" class="input" />
+        <label for="input1">input 1</label>
+      </div>
+      <div class="item">
+        <input id="input2" class="input" />
+        <label for="input2">input 2</label>
+      </div>
+      <div class="item">
+        <input id="input3" class="input" />
+        <label for="input3">input 3</label>
+      </div>
+
+    </div>
+
+    <script>
+
+      var obj={
+
+        ItemContainer:{
+          display: 'block',
+          width: '100%',
+          height: '400px',
+          background: 'rgba(0, 0, 255, 0.26)',
+          color: 'white',
+          boxSizing: 'border-box',
+          paddingTop: '20px',
+
+          Item:{
+            display: 'block',
+            boxSizing: 'border-box',
+            padding: '0 10px 0 10px',
+            height: '30px',
+            fontSize: '16px',
+            color: 'black',
+            textAlign: 'center',
+            marginTop: '10px',
+
+            _input: {
+              display: 'inline-block',
+              verticalAlign: 'middle',
+              width:'300px',
+              height: '100%',
+              borderRadius: '30px',
+              boxSizing: 'border-box',
+              paddingLeft: '20px'
+
+            },
+            _label: {
+              display: 'inline-block',
+              verticalAlign: 'middle'
+            },
+            input2_:{
+              color: 'red'
+            }
+          }
+        }
+      };
+
+
+
+      function compile(obj){
+
+        var num = 0;
+        var currentNum = num;
+        var arrStrings = [];
+
+
+        function genSelectorName(key){
+
+          if(key[0] == '_'){
+            return key.slice(1).toLowerCase()
+          }
+          else if(key[key.length -1] == '_'){
+            return '#'+ fromCamelCase(key.slice(0,-1));
+          }
+          else{
+            return '.'+ fromCamelCase(key);
+          }
+        }
+        function fromCamelCase(str) {
+          return (str.replace(/([a-z0-9])([A-Z])/, function (match, a, b) {return a + '-' + b.toLowerCase()})).toLowerCase();
+        }
+
+        function gen(_obj, name, selectorContainer){
+
+          var genNum = currentNum;
+          var selector = null;
+          var selectorName = null;
+
+          if(arguments.length > 1){
+            selectorName = selectorContainer ? selectorContainer + ' '+ genSelectorName(name) : genSelectorName(name) ;
+            selector = '{ \n';
+          }
+
+          for(var key in _obj ){
+
+              if(typeof _obj[key] == 'object'){
+                  currentNum+=1;
+                  gen(_obj[key],key, selectorName);
+              }else{
+                selector += (fromCamelCase(key)+':'+_obj[key]+'; \n');
+              }
+
+          }
+
+          if(arguments.length > 1){
+            selector += '} \n';
+            arrStrings.push(selectorName +''+selector);
+          }
+
+        }
+
+        gen(obj);
+
+        var resultString = '';
+
+        for(var i = arrStrings.length - 1; i >= 0; i--){
+          resultString += (arrStrings[i]+'\n');
+        }
+
+        return resultString;
+
+      }
+
+      var selector = compile(obj);
+
+      $('head').append($('<style></style>').html(selector));
+
+
+    </script>
+
+
+
+  </body>
+</html>
