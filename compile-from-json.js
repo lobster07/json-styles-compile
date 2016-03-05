@@ -25,34 +25,41 @@
 
     function gen(_obj, name, selectorContainer){
 
+      var options = {
+        obj: _obj ? _obj : null,
+        selectorName: selectorContainer ? selectorContainer + ' '+ genSelectorName(name) : name ? genSelectorName(name): null,
+        selector: null
+      }
+
       var numNested = Number(currentNum);
 
-      var selector = null;
-      var selectorName = null;
       var nestingAdded = false;
 
-      if(arguments.length > 1){
-        selectorName = selectorContainer ? selectorContainer + ' '+ genSelectorName(name) : genSelectorName(name) ;
-        selector = '{ \n';
+
+      if(options.obj && Object.getOwnPropertyNames(options.obj).length){
+
+        options.selector = '{ \n';
+
+        for(var key in _obj ){
+
+            if(typeof _obj[key] == 'object'){
+                if(!nestingAdded){
+                  nestingAdded = true;
+                  currentNum+=1;
+                }
+                gen(_obj[key], key, options.selectorName);
+            }else{
+              options.selector += ('\t'+ fromCamelCase(key)+':'+_obj[key]+'; \n');
+            }
+
+        }
+
+        options.selector += '} \n';
+        if(options.selectorName) arrSelectors.push({ nesting: numNested, selectorName: options.selectorName, selector: options.selector});
+
       }
 
-      for(var key in _obj ){
 
-          if(typeof _obj[key] == 'object'){
-              if(!nestingAdded){
-                nestingAdded = true;
-                currentNum+=1;
-              }
-              gen(_obj[key],key, selectorName);
-          }else{
-            selector += ('\t'+ fromCamelCase(key)+':'+_obj[key]+'; \n');
-          }
-
-      }
-      if(arguments.length > 1){
-        selector += '} \n';
-        arrSelectors.push({ nesting: numNested, selectorName: selectorName, selector: selector});
-      }
       currentNum = Number(numNested);
 
     }
