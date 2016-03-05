@@ -1,7 +1,7 @@
 # json-styles-compile
 
-
-  var obj={
+```javascript
+  var obj= {
         _body:{ // will be convert to selector 'body'
           margin: 0,
           padding: 0
@@ -45,5 +45,4 @@
       var selector = CompileFromJSON(obj);
 
       $('head').append($('<style></style>').html(selector));
-      
-  
+```
