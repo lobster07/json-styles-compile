@@ -95,7 +95,6 @@
 
         function gen(_obj, name, selectorContainer){
 
-          var genNum = currentNum;
           var selector = null;
           var selectorName = null;
 
@@ -110,14 +109,20 @@
                   currentNum+=1;
                   gen(_obj[key],key, selectorName);
               }else{
-                selector += (fromCamelCase(key)+':'+_obj[key]+'; \n');
+                console.log(currentNum, fromCamelCase(key),_obj[key]);
+                selector += ('\t'+ fromCamelCase(key)+':'+_obj[key]+'; \n');
               }
 
           }
 
           if(arguments.length > 1){
             selector += '} \n';
-            arrStrings.push(selectorName +''+selector);
+
+            arrStrings.push({
+              nestings: currentNum,
+              selectorName: selectorName,
+              selector: selector
+            });
           }
 
         }
@@ -126,10 +131,10 @@
 
         var resultString = '';
 
-        for(var i = arrStrings.length - 1; i >= 0; i--){
-          resultString += (arrStrings[i]+'\n');
+        console.log(arrStrings);
+        for(var i=0; i< arrStrings.length; i++){
+          resultString += (arrStrings[i].selectorName + " "+ arrStrings[i].selector + '\n');
         }
-
         return resultString;
 
       }
