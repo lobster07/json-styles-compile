@@ -90,7 +90,7 @@
           }
         }
         function fromCamelCase(str) {
-          return (str.replace(/([a-z0-9])([A-Z])/, function (match, a, b) {return a + '-' + b.toLowerCase()})).toLowerCase();
+          return str.replace(/\W+/g, '-').replace(/([a-z\d])([A-Z])/g, '$1-$2').toLowerCase();
         }
 
         function gen(_obj, name, selectorContainer){
